@@ -4,36 +4,58 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
-	"strconv"
-	"strings"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-// func Test_Env_Var_Proxy(t *testing.T) {
-// 	mux := http.NewServeMux()
-// 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-// 		w.Write([]byte("This is proxy server end point"))
-// 	})
-// 	proxyServer := httptest.NewServer(mux)
-// 	defer proxyServer.Close()
-// 	configuration := NewConfiguration()
-// 	configuration.Debug = true
-// 	os.Setenv("HTTP_PROXY", proxyServer.URL)
+func Test_Env_Var_Proxy(t *testing.T) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("This is proxy server end point"))
+	})
+	proxyServer := httptest.NewServer(mux)
+	defer proxyServer.Close()
+	configuration := NewConfiguration()
+	configuration.Debug = true
+	os.Setenv("HTTP_PROXY", proxyServer.URL)
 
-// 	proxyClient := NewAPIClient(configuration)
-// 	req, err := http.NewRequest(http.MethodGet, "http://example.com", nil)
-// 	require.NoError(t, err, "Create new http request should not error")
-// 	resp, err := proxyClient.callAPI(req)
-// 	require.NoError(t, err, "Make http request should not error")
-// 	os.Unsetenv("HTTP_PROXY")
-// 	b, err := io.ReadAll(resp.Body)
-// 	require.NoError(t, err, "Read http response should not error")
-// 	assert.Equal(t, "This is proxy server end point", string(b))
-// }
+	proxyClient := NewAPIClient(configuration)
+	req, err := http.NewRequest(http.MethodGet, "http://example.com", nil)
+	require.NoError(t, err, "Create new http request should not error")
+	resp, err := proxyClient.callAPI(req)
+	require.NoError(t, err, "Make http request should not error")
+	os.Unsetenv("HTTP_PROXY")
+	b, err := io.ReadAll(resp.Body)
+	require.NoError(t, err, "Read http response should not error")
+	assert.Equal(t, "This is proxy server end point", string(b))
+}
+
+func Test_List_User(t *testing.T) {
+	_, resp, err := apiClient.UserApi.ListUsers(apiClient.cfg.Context).Limit(200).Execute()
+	require.NoError(t, err, "should not error when list users")
+	b, err := io.ReadAll(resp.Body)
+	require.NoError(t, err, "Read http response should not error")
+	t.Error(string(b))
+}
+
+func Test_List_Idp(t *testing.T) {
+	_, resp, err := apiClient.IdentityProviderApi.ListIdentityProviders(apiClient.cfg.Context).Limit(200).Execute()
+	require.NoError(t, err, "should not error when list idp")
+	b, err := io.ReadAll(resp.Body)
+	require.NoError(t, err, "Read http response should not error")
+	t.Error(string(b))
+}
+
+func Test_List_Group(t *testing.T) {
+	_, resp, err := apiClient.GroupApi.ListGroups(apiClient.cfg.Context).Limit(200).Execute()
+	require.NoError(t, err, "should not error when list group")
+	b, err := io.ReadAll(resp.Body)
+	require.NoError(t, err, "Read http response should not error")
+	t.Error(string(b))
+}
 
 // func Test_Config_Proxy(t *testing.T) {
 // 	mux := http.NewServeMux()
