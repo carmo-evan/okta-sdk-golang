@@ -1,6 +1,7 @@
 package okta
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +13,10 @@ import (
 )
 
 func Test_Env_Var_Proxy(t *testing.T) {
+	fmt.Println("HTTPS_PROXY", os.Getenv("HTTPS_PROXY"))
+	fmt.Println("https_proxy", os.Getenv("https_proxy"))
+	fmt.Println("HTTP_PROXY", os.Getenv("HTTP_PROXY"))
+	fmt.Println("http_proxy", os.Getenv("http_proxy"))
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("This is proxy server end point"))
@@ -33,29 +38,29 @@ func Test_Env_Var_Proxy(t *testing.T) {
 	assert.Equal(t, "This is proxy server end point", string(b))
 }
 
-func Test_List_User(t *testing.T) {
-	_, resp, err := apiClient.UserApi.ListUsers(apiClient.cfg.Context).Limit(200).Execute()
-	require.NoError(t, err, "should not error when list users")
-	b, err := io.ReadAll(resp.Body)
-	require.NoError(t, err, "Read http response should not error")
-	t.Error(string(b))
-}
+// func Test_List_User(t *testing.T) {
+// 	_, resp, err := apiClient.UserApi.ListUsers(apiClient.cfg.Context).Limit(200).Execute()
+// 	require.NoError(t, err, "should not error when list users")
+// 	b, err := io.ReadAll(resp.Body)
+// 	require.NoError(t, err, "Read http response should not error")
+// 	t.Error(string(b))
+// }
 
-func Test_List_Idp(t *testing.T) {
-	_, resp, err := apiClient.IdentityProviderApi.ListIdentityProviders(apiClient.cfg.Context).Limit(200).Execute()
-	require.NoError(t, err, "should not error when list idp")
-	b, err := io.ReadAll(resp.Body)
-	require.NoError(t, err, "Read http response should not error")
-	t.Error(string(b))
-}
+// func Test_List_Idp(t *testing.T) {
+// 	_, resp, err := apiClient.IdentityProviderApi.ListIdentityProviders(apiClient.cfg.Context).Limit(200).Execute()
+// 	require.NoError(t, err, "should not error when list idp")
+// 	b, err := io.ReadAll(resp.Body)
+// 	require.NoError(t, err, "Read http response should not error")
+// 	t.Error(string(b))
+// }
 
-func Test_List_Group(t *testing.T) {
-	_, resp, err := apiClient.GroupApi.ListGroups(apiClient.cfg.Context).Limit(200).Execute()
-	require.NoError(t, err, "should not error when list group")
-	b, err := io.ReadAll(resp.Body)
-	require.NoError(t, err, "Read http response should not error")
-	t.Error(string(b))
-}
+// func Test_List_Group(t *testing.T) {
+// 	_, resp, err := apiClient.GroupApi.ListGroups(apiClient.cfg.Context).Limit(200).Execute()
+// 	require.NoError(t, err, "should not error when list group")
+// 	b, err := io.ReadAll(resp.Body)
+// 	require.NoError(t, err, "Read http response should not error")
+// 	t.Error(string(b))
+// }
 
 // func Test_Config_Proxy(t *testing.T) {
 // 	mux := http.NewServeMux()
