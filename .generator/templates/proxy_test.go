@@ -26,13 +26,15 @@ func Test_Env_Var_Proxy(t *testing.T) {
 	os.Setenv("HTTP_PROXY", proxyServer.URL)
 
 	proxyClient := NewAPIClient(configuration)
-	req, err := http.NewRequest(http.MethodGet, "http://apple.com", nil)
+	req, err := http.NewRequest(http.MethodGet, "http://example.com", nil)
 	require.NoError(t, err, "Create new http request should not error")
 	resp, err := proxyClient.callAPI(req)
 	require.NoError(t, err, "Make http request should not error")
+	os.Unsetenv("HTTP_PROXY")
 	b, err := io.ReadAll(resp.Body)
 	require.NoError(t, err, "Read http response should not error")
 	assert.Equal(t, "This is proxy server end point", string(b))
+
 }
 
 func Test_Config_Proxy(t *testing.T) {
@@ -99,6 +101,7 @@ func Test_Proxy_Order(t *testing.T) {
 	require.NoError(t, err, "Create new http request should not error")
 	resp, err := proxyClient.callAPI(req)
 	require.NoError(t, err, "Make http request should not error")
+	os.Unsetenv("HTTP_PROXY")
 	b, err := io.ReadAll(resp.Body)
 	require.NoError(t, err, "Read http response should not error")
 	assert.Equal(t, "This is config proxy server end point", string(b))
