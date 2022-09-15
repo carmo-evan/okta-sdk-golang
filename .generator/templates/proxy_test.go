@@ -26,8 +26,9 @@ func Test_Env_Var_Proxy(t *testing.T) {
 	configuration := NewConfiguration()
 	configuration.Debug = true
 	os.Setenv("HTTP_PROXY", proxyServer.URL)
-
+	fmt.Println(os.Getenv("HTTP_PROXY"))
 	proxyClient := NewAPIClient(configuration)
+	fmt.Println(proxyClient.cfg.HTTPClient.Transport)
 	req, err := http.NewRequest(http.MethodGet, "http://example.com", nil)
 	require.NoError(t, err, "Create new http request should not error")
 	resp, err := proxyClient.callAPI(req)
