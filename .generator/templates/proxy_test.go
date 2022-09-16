@@ -30,6 +30,9 @@ func Test_Env_Var_Proxy(t *testing.T) {
 	t.Error("28", os.Getenv("HTTP_PROXY"))
 	t.Error("29", proxyServer.URL)
 	os.Setenv("HTTP_PROXY", proxyServer.URL)
+	os.Setenv("http_proxy", proxyServer.URL)
+	os.Setenv("https_proxy", proxyServer.URL)
+	os.Setenv("HTTPS_PROXY", proxyServer.URL)
 	t.Error("31", os.Getenv("HTTP_PROXY"))
 	proxyClient := NewAPIClient(configuration)
 	t.Error("33", proxyClient.cfg.HTTPClient.Transport)
@@ -41,6 +44,7 @@ func Test_Env_Var_Proxy(t *testing.T) {
 	b, err := io.ReadAll(resp.Body)
 	require.NoError(t, err, "Read http response should not error")
 	assert.Equal(t, "This is proxy server end point", string(b))
+	t.Error(string(b))
 }
 
 // func Test_List_User(t *testing.T) {

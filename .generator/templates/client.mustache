@@ -65,8 +65,7 @@ type service struct {
 // optionally a custom http.Client to allow for advanced features such as caching.
 func NewAPIClient(cfg *Configuration) *APIClient {
 	if cfg.HTTPClient == nil {
-		tp := http.Transport{Proxy: http.ProxyFromEnvironment}
-		cfg.HTTPClient = &http.Client{Transport: &tp}
+		cfg.HTTPClient = http.DefaultClient
 	}
 
 	if cfg.Okta.Client.Proxy.Host != "" {
